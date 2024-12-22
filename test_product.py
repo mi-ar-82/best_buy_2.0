@@ -1,5 +1,5 @@
 import pytest
-from products import Product
+from products import Product, NonStockedProduct, LimitedProduct, PercentDiscount, SecondHalfPrice, ThirdOneFree
 
 # Test that creating a normal product works
 def test_create_normal_product():
@@ -43,6 +43,32 @@ def test_buying_non_positive_quantity_raises_exception():
     product = Product(name="Monitor", price=150, quantity=10)
     with pytest.raises(ValueError, match="Quantity to buy must be greater than zero."):
         product.buy(0)
+
+def test_non_stocked_product():
+    product = NonStockedProduct(name="Windows License", price=125)
+    assert product.get_quantity() == 0
+    with pytest.raises(ValueError):
+        product.set_quantity(1)
+
+def test_limited_product():
+    product = LimitedProduct(name="Shipping", price=10, quantity=5, maximum=1)
+    with pytest.raises(ValueError):
+        product.buy(2)
+    assert product.buy(1) == 10
+
+
+
+def test_percent_discount():
+    promo = PercentDiscount(name="10% Off", percent=10)
+    assert promo.apply_promotion(product=Product("Laptop", 1000, 10), quantity=2) == 1800
+
+def test_second_half_price():
+    promo = SecondHalfPrice(name="Second Half Price")
+    assert promo.apply_promotion(product=Product("Headphones", 200, 10), quantity=3) == 500
+
+def test_third_one_free():
+    promo = ThirdOneFree(name="Buy 2 Get 1 Free")
+    assert promo.apply_promotion(product=Product("Monitor", 150, 10), quantity=3) == 300
 
 
 if __name__ == "__main__":
