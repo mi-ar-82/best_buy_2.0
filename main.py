@@ -5,7 +5,7 @@ import store  # Import the store module
 product_list = [
     products.Product("MacBook Air M2", price=1450, quantity=100),
     products.Product("Bose QuietComfort Earbuds", price=250, quantity=500),
-    products.Product("Google Pixel 7", price=500, quantity=250)
+    products.Product("Google Pixel 7", price=500, quantity=250),
     products.NonStockedProduct("Windows License", price=125),
     products.LimitedProduct("Shipping", price=10, quantity=250, maximum=1)
 ]
@@ -77,7 +77,9 @@ def make_order(store_obj):
         # Use the find_product_by_name function
         product = find_product_by_name(store_obj, product_name)
         
-        if not product:  # If no exact match was returned
+        if not product:
+            # If no exact match was returned
+            print(f"Product '{product_name}' not found. Please try again.")
             continue
 
         try:
