@@ -98,6 +98,8 @@ class LimitedProduct(Product):
     def __init__(self, name, price, quantity, maximum):
         super().__init__(name, price, quantity)
         self.maximum = maximum
+        if maximum < 0:
+            raise ValueError("Maximum purchase limit cannot be negative.")
 
     def buy(self, quantity: int) -> float:
         if quantity > self.maximum:
