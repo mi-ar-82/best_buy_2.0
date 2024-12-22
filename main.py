@@ -82,6 +82,9 @@ def make_order(store_obj):
             # If no exact match was returned
             print(f"Product '{product_name}' not found. Please try again.")
             continue
+        if not product.is_active():
+            print(f"Product '{product_name}' is inactive and cannot be ordered.")
+            continue
 
         try:
             quantity = int(input(f"Enter quantity for {product_name}: "))
