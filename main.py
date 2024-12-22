@@ -32,6 +32,7 @@ def show_total_amount(store_obj):
 def find_product_by_name(store_obj, product_name):
     """
     Searches for a product by name in the store.
+    The product needs to be active in order to be shown.
     If an exact match is found, it returns the product.
     If no exact match is found, it searches for partial matches and prints them.
 
@@ -42,7 +43,7 @@ def find_product_by_name(store_obj, product_name):
     # Find exact match
     product = None
     for product_item in store_obj.products:
-        if product_item.name.lower() == product_name.lower():
+        if product_item.name.lower() == product_name.lower() and product_item.is_active():
             product = product_item
             break
 
