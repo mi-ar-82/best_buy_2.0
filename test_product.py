@@ -56,8 +56,6 @@ def test_limited_product():
         product.buy(2)
     assert product.buy(1) == 10
 
-
-
 def test_percent_discount():
     promo = PercentDiscount(name="10% Off", percent=10)
     assert promo.apply_promotion(product=Product("Laptop", 1000, 10), quantity=2) == 1800
