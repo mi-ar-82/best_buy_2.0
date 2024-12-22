@@ -1,3 +1,5 @@
+from abc import ABC, abstractmethod
+
 class Product:
 # Instance variables:
 # Name (str)
@@ -73,15 +75,18 @@ class NonStockedProduct(Product):
     as these products are intangible and do not require stock tracking.
     """
     def __init__(self, name, price):
+        # Initialize a non-stocked product with quantity always set to 0
         super().__init__(name, price, quantity=0)
 
     def set_quantity(self, quantity: int):
-        # Prevent any change to quantity
+        # Prevent any change to quantity for non-stocked products
         if quantity != 0:
             raise ValueError("Non-stocked products must always have a quantity of 0.")
 
     def show(self) -> str:
+        # Return a string representation indicating the product is non-stocked
         return f"{self.name} (Non-Stocked), Price: {self.price}"
+
 
 class LimitedProduct(Product):
     """
@@ -101,4 +106,45 @@ class LimitedProduct(Product):
 
     def show(self) -> str:
         return f"{self.name} (Limited, Max: {self.maximum}), Price: {self.price}, Quantity: {self.quantity}"
+    
+
+class Promotion(ABC):
+    """
+    Abstract base class for promotions.
+    """
+    def __init__(self, name):
+        self.name = name
+
+    @abstractmethod
+    def apply_promotion(self, product, quantity) -> float:
+        pass
+
+class PercentDiscount(Promotion):
+    """
+    Applies a percentage discount to the product.
+    """
+    def __init__(self, name, percent):
+        super().__init__(name)
+        self.percent = percent
+
+    def apply_promotion(self, product, quantity) -> float:
+        return product.price * quantity * (1 - self.percent / 100)
+
+class SecondHalfPrice(Promotion):
+    """
+    Applies a promotion where the second item is half price.
+    """
+    def apply_promotion(self, product, quantity) -> float:
+        full_price_items = quantity // 2 + quantity % 2
+        half_price_items = quantity // 2
+        return full_price_items * product.price + half_price_items * product.price * 0.5
+
+class ThirdOneFree(Promotion):
+    """
+    Applies a promotion where every third item is free.
+    """
+    def apply_promotion(self, product, quantity) -> float:
+        paid_items = quantity - (quantity // 3)
+        return paid_items * product.price
+
 
