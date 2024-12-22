@@ -35,10 +35,10 @@ class Store:
         # Buys the products and returns the total price of the order.
         # Process an order and return the total price of the order
         total_price = 0.0
-        if not product.is_active():
-            raise ValueError(f"The product {product.name} is inactive and cannot be ordered.")
         for item in shopping_list:
-            product, quantity = item
+            if not product.is_active():
+                raise ValueError(f"The product {product.name} is inactive and cannot be ordered.")
+            
             if product not in self.products:
                 raise ValueError(f"The product {product.name} is not available in the store.")
             total_price += product.buy(quantity)
