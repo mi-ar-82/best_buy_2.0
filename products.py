@@ -65,3 +65,40 @@ class Product:
         self.set_quantity(self.quantity - quantity)
         
         return total_price
+
+class NonStockedProduct(Product):
+    """
+    Represents a product that is not physically stocked.
+    This subclass overrides the behavior of quantity to ensure it is always zero,
+    as these products are intangible and do not require stock tracking.
+    """
+    def __init__(self, name, price):
+        super().__init__(name, price, quantity=0)
+
+    def set_quantity(self, quantity: int):
+        # Prevent any change to quantity
+        if quantity != 0:
+            raise ValueError("Non-stocked products must always have a quantity of 0.")
+
+    def show(self) -> str:
+        return f"{self.name} (Non-Stocked), Price: {self.price}"
+
+class LimitedProduct(Product):
+    """
+    Represents a product with a maximum purchase limit per order.
+    This subclass extends the base Product class to add the functionality of limiting
+    the quantity that can be purchased in a single order. If an attempt is made to
+    buy more than the allowed maximum, an exception is raised.
+    """
+    def __init__(self, name, price, quantity, maximum):
+        super().__init__(name, price, quantity)
+        self.maximum = maximum
+
+    def buy(self, quantity: int) -> float:
+        if quantity > self.maximum:
+            raise ValueError(f"You cannot buy more than {self.maximum} of this product.")
+        return super().buy(quantity)
+
+    def show(self) -> str:
+        return f"{self.name} (Limited, Max: {self.maximum}), Price: {self.price}, Quantity: {self.quantity}"
+
