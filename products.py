@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+
 class Product:
     def __init__(self, name, price, quantity):
         # Validate inputs and raise exceptions if invalid
@@ -13,6 +14,15 @@ class Product:
         self.price = price
         self._quantity = quantity  # Note the underscore for the protected attribute
         self._active = True  # Product is active by default
+        self.promotion = None  # New attribute for promotions
+
+    # Getter and setter for promotion
+    def get_promotion(self):
+        return self.promotion
+
+    def set_promotion(self, promotion):
+        self.promotion = promotion
+
 
     @property
     def quantity(self):
@@ -34,23 +44,30 @@ class Product:
     def active(self, active: bool):
         self._active = active
 
+    def deactivate(self):
+        """
+        Sets the product's active status to False.
+        """
+        self._active = False
+
     def show(self) -> str:
-        return f"{self.name}, Price: {self.price}, Quantity: {self.quantity}"
+        promo_info = f" (Promotion: {self.promotion.name})" if self.promotion else ""
+        return f"{self.name}, Price: {self.price}, Quantity: {self.quantity}{promo_info}"
 
     def buy(self, quantity: int) -> float:
         if quantity <= 0:
             raise ValueError("Quantity to buy must be greater than zero.")
-
         if quantity > self.quantity:
-            raise ValueError(
-                f"You can not buy {quantity} items. Not enough on stock. Only {self.quantity} available."
-            )
+            raise ValueError(f"Not enough stock. Only {self.quantity} available.")
 
-        # calculates total price and update stock
-        total_price = self.price * quantity
-        self.quantity -= quantity  # Use the setter to update the quantity
+        total_price = (
+            self.promotion.apply_promotion(self, quantity)
+            if self.promotion else self.price * quantity
+        )
 
+        self.quantity -= quantity
         return total_price
+
 
 class NonStockedProduct(Product):
     """
@@ -74,6 +91,7 @@ class NonStockedProduct(Product):
 
     def show(self) -> str:
         return f"{self.name} (Non-Stocked), Price: {self.price}"
+
 
 class LimitedProduct(Product):
     """
@@ -108,6 +126,7 @@ class LimitedProduct(Product):
     def show(self) -> str:
         return f"{self.name} (Limited, Max: {self.maximum}), Price: {self.price}, Quantity: {self.quantity}"
 
+
 class Promotion(ABC):
     """
     Abstract base class for promotions.
@@ -119,6 +138,7 @@ class Promotion(ABC):
     @abstractmethod
     def apply_promotion(self, product, quantity) -> float:
         pass
+
 
 class PercentDiscount(Promotion):
     """
@@ -149,6 +169,7 @@ class PercentDiscount(Promotion):
             raise ValueError("Product price cannot be negative.")
         return product.price * quantity * (1 - self.percent / 100)
 
+
 class SecondHalfPrice(Promotion):
     """
     Applies a promotion where the second item is half price.
@@ -158,6 +179,7 @@ class SecondHalfPrice(Promotion):
         full_price_items = quantity // 2 + quantity % 2
         half_price_items = quantity // 2
         return full_price_items * product.price + half_price_items * product.price * 0.5
+
 
 class ThirdOneFree(Promotion):
     """
