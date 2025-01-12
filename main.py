@@ -1,15 +1,6 @@
 import products  # Import the products module
 import store  # Import the store module
 
-# Setup initial stock of inventory
-product_list = [
-    products.Product("MacBook Air M2", price=1450, quantity=100),
-    products.Product("Bose QuietComfort Earbuds", price=250, quantity=500),
-    products.Product("Google Pixel 7", price=500, quantity=250),
-    products.NonStockedProduct("Windows License", price=125),
-    products.LimitedProduct("Shipping", price=10, quantity=250, maximum=1)
-]
-best_buy = store.Store(product_list)
 
 
 def list_all_products(store_obj):
@@ -21,12 +12,14 @@ def list_all_products(store_obj):
         print(product.show())
 
 
+
 def show_total_amount(store_obj):
     """
     Displays the total quantity of items in the store.
     """
     total_quantity = store_obj.get_total_quantity()
     print(f"\nTotal quantity of items in the store: {total_quantity}")
+
 
 
 def find_product_by_name(store_obj, product_name):
@@ -74,10 +67,10 @@ def make_order(store_obj):
         product_name = input("\nEnter the product name (or 'done' to finish): ").strip()
         if product_name.lower() == 'done':
             break
-            
+
         # Use the find_product_by_name function
         product = find_product_by_name(store_obj, product_name)
-        
+
         if not product:
             # If no exact match was returned
             print(f"Product '{product_name}' not found. Please try again.")
@@ -99,6 +92,7 @@ def make_order(store_obj):
         print(f"Error placing order: {e}")
 
 
+
 def quit_program():
     """
     Exits the program with a farewell message.
@@ -107,11 +101,24 @@ def quit_program():
     exit()
 
 
+
 def start(store_obj):
     """
     Starts the user interface for interacting with the store.
     :param store_obj: Store object to interact with.
     """
+
+    # Setup initial stock of inventory
+    product_list = [
+        products.Product("MacBook Air M2", price = 1450, quantity = 100),
+        products.Product("Bose QuietComfort Earbuds", price = 250, quantity = 500),
+        products.Product("Google Pixel 7", price = 500, quantity = 250),
+        products.NonStockedProduct("Windows License", price = 125),
+        products.LimitedProduct("Shipping", price = 10, quantity = 250, maximum = 1)
+    ]
+    best_buy = store.Store(product_list)
+
+
     while True:
         print("\nWelcome to Best Buy!")
         print("1. List all products in store")
@@ -126,16 +133,17 @@ def start(store_obj):
             continue
 
         if choice == 1:
-            list_all_products(store_obj)
+            list_all_products(best_buy)
         elif choice == 2:
-            show_total_amount(store_obj)
+            show_total_amount(best_buy)
         elif choice == 3:
-            make_order(store_obj)
+            make_order(best_buy)
         elif choice == 4:
             quit_program()
         else:
             print("Invalid choice. Please select a number between 1 and 4.")
 
 
+
 if __name__ == "__main__":
-    start(best_buy)
+    start()
