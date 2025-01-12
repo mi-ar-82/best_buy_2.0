@@ -1,9 +1,20 @@
 from abc import ABC, abstractmethod
 
 
+# Product Class
 class Product:
+    """
+    Represents a general product in the store.
+    """
     def __init__(self, name, price, quantity):
-        # Validate inputs and raise exceptions if invalid
+        """
+        Initializes a product with a name, price, and quantity.
+
+        :param name: Name of the product (str).
+        :param price: Price of the product (float).
+        :param quantity: Quantity of the product in stock (int).
+        :raises ValueError: If name is empty or price/quantity is invalid.
+        """
         if not name:
             raise ValueError("Product name cannot be empty.")
         if price < 0:
@@ -18,18 +29,38 @@ class Product:
 
     # Getter and setter for promotion
     def get_promotion(self):
+        """
+        Gets the promotion applied to the product.
+
+        :return: Promotion object or None.
+         """
         return self.promotion
 
     def set_promotion(self, promotion):
-        self.promotion = promotion
+        """
+        Sets a promotion for the product.
 
+        :param promotion: Promotion object to apply.
+        """
+        self.promotion = promotion
 
     @property
     def quantity(self):
+        """
+        Gets the current quantity of the product.
+
+        :return: Quantity of the product (int).
+        """
         return self._quantity
 
     @quantity.setter
     def quantity(self, quantity: int):
+        """
+        Sets the quantity of the product. Deactivates it if quantity is zero.
+
+        :param quantity: New quantity to set (int).
+        :raises ValueError: If quantity is negative.
+        """
         if quantity < 0:
             raise ValueError("Quantity cannot be negative.")
         self._quantity = quantity
@@ -38,10 +69,20 @@ class Product:
 
     @property
     def active(self) -> bool:
+        """
+        Checks if the product is active.
+
+        :return: True if active, False otherwise.
+        """
         return self._active
 
     @active.setter
     def active(self, active: bool):
+        """
+        Sets the active status of the product.
+
+        :param active: Boolean indicating whether the product is active.
+        """
         self._active = active
 
     def deactivate(self):
@@ -51,10 +92,22 @@ class Product:
         self._active = False
 
     def show(self) -> str:
+        """
+        Displays details about the product.
+
+        :return: A string representation of the product.
+        """
         promo_info = f" (Promotion: {self.promotion.name})" if self.promotion else ""
         return f"{self.name}, Price: {self.price}, Quantity: {self.quantity}{promo_info}"
 
     def buy(self, quantity: int) -> float:
+        """
+        Processes a purchase of the product.
+
+        :param quantity: Quantity to purchase (int).
+        :return: Total price after applying promotions (float).
+        :raises ValueError: If requested quantity is invalid or exceeds stock.
+        """
         if quantity <= 0:
             raise ValueError("Quantity to buy must be greater than zero.")
         if quantity > self.quantity:
@@ -124,7 +177,8 @@ class LimitedProduct(Product):
         return super().buy(quantity)
 
     def show(self) -> str:
-        return f"{self.name} (Limited, Max: {self.maximum}), Price: {self.price}, Quantity: {self.quantity}"
+        return (f"{self.name} (Limited, Max: {self.maximum}), "
+                f"Price: {self.price}, Quantity: {self.quantity}")
 
 
 class Promotion(ABC):

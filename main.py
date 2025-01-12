@@ -2,26 +2,32 @@ import products  # Import the products module
 import store  # Import the store module
 
 
-
+# Function: List All Products
 def list_all_products(store_obj):
     """
     Lists all active products in the store.
+
+    :param store_obj: The store object containing the products (store.Store).
+    :return: None
     """
     print("\nAvailable Products:")
     for product in store_obj.get_all_products():
         print(product.show())
 
 
-
+# Function: Show Total Amount
 def show_total_amount(store_obj):
     """
     Displays the total quantity of items in the store.
+
+    :param store_obj: The store object containing the products (store.Store).
+    :return: None
     """
     total_quantity = store_obj.get_total_quantity()
     print(f"\nTotal quantity of items in the store: {total_quantity}")
 
 
-
+# Function: Find Product by Name
 def find_product_by_name(store_obj, product_name):
     """
     Searches for a product by name in the store.
@@ -57,10 +63,13 @@ def find_product_by_name(store_obj, product_name):
     return product
 
 
-
+# Function: Make Order
 def make_order(store_obj):
     """
     Allows the user to make an order by specifying product names and quantities.
+
+    :param store_obj: The store object containing the products (store.Store).
+    :return: None
     """
     shopping_list = []
     while True:
@@ -92,20 +101,24 @@ def make_order(store_obj):
         print(f"Error placing order: {e}")
 
 
-
+# Function: Quit Program
 def quit_program():
     """
     Exits the program with a farewell message.
+
+    :return: None
     """
     print("\nThank you for visiting Best Buy! Goodbye!")
     exit()
 
 
-
+# Function: Start Program
 def start(store_obj):
     """
     Starts the user interface for interacting with the store.
-    :param store_obj: Store object to interact with.
+
+    :param store_obj: The store object to interact with (store.Store).
+    :return: None
     """
 
     # Setup initial stock of inventory
@@ -146,4 +159,5 @@ def start(store_obj):
 
 
 if __name__ == "__main__":
+    # Setup initial stock of inventory
     start()
