@@ -120,12 +120,9 @@ def quit_program():
 
 
 # Function: Start Program
-def start(store_obj):
+def start():
     """
     Starts the user interface for interacting with the store.
-
-    :param store_obj: The store object to interact with (store.Store).
-    :return: None
     """
 
     # Setup initial stock of inventory
