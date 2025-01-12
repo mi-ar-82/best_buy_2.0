@@ -1,8 +1,7 @@
 import pytest
+
 from products import (
     Product,
-    NonStockedProduct,
-    LimitedProduct,
     PercentDiscount,
     SecondHalfPrice,
     ThirdOneFree
@@ -15,7 +14,8 @@ def test_product_with_percent_discount():
     Test applying a percent discount to a product.
 
     Inputs:
-        None (test setup includes creating a Product and PercentDiscount instance).
+        None (test setup includes creating a Product
+        and PercentDiscount instance).
 
     Outputs:
         Asserts that the discounted price and updated quantity are correct.
@@ -35,7 +35,8 @@ def test_product_with_second_half_price():
     Test applying a "Second Half Price" promotion to a product.
 
     Inputs:
-        None (test setup includes creating a Product and SecondHalfPrice instance).
+        None (test setup includes creating a Product
+        and SecondHalfPrice instance).
 
     Outputs:
         Asserts that the promotional pricing and updated quantity are correct.
@@ -55,7 +56,8 @@ def test_product_with_third_one_free():
     Test applying a "Buy 2 Get 1 Free" promotion to a product.
 
     Inputs:
-        None (test setup includes creating a Product and ThirdOneFree instance).
+        None (test setup includes creating a Product
+        and ThirdOneFree instance).
 
     Outputs:
         Asserts that the promotional pricing and updated quantity are correct.
@@ -75,10 +77,12 @@ def test_show_method_with_promotion():
     Test that the show method includes promotion details.
 
     Inputs:
-        None (test setup includes creating a Product and PercentDiscount instance).
+        None (test setup includes creating a Product
+        and PercentDiscount instance).
 
     Outputs:
-        Asserts that the promotion details are included in the string returned by show().
+        Asserts that the promotion details are included
+        in the string returned by show().
     """
     product = Product(name = "Smartphone", price = 800, quantity = 5)
     promo = PercentDiscount(name = "20% Off", percent = 20)
@@ -94,7 +98,8 @@ def test_remove_promotion():
     Test removing a promotion from a product.
 
     Inputs:
-        None (test setup includes creating a Product and PercentDiscount instance).
+        None (test setup includes creating a Product
+        and PercentDiscount instance).
 
     Outputs:
         Asserts that the pricing reflects the removal of the promotion.
@@ -114,19 +119,24 @@ def test_remove_promotion():
 # Test: Invalid Quantity with Promotion
 def test_invalid_quantity_with_promotion():
     """
-    Test handling of invalid purchase quantities (e.g., zero or negative values).
+    Test handling of invalid purchase quantities
+    (e.g., zero or negative values).
 
     Inputs:
-        None (test setup includes creating a Product and ThirdOneFree instance).
+        None (test setup includes creating a Product
+        and ThirdOneFree instance).
 
     Outputs:
-        Asserts that an appropriate ValueError is raised for invalid quantities.
+        Asserts that an appropriate ValueError
+        is raised for invalid quantities.
     """
     product = Product(name = "Camera", price = 500, quantity = 5)
     promo = ThirdOneFree(name = "Buy 2 Get 1 Free")
     product.set_promotion(promo)
 
-    with pytest.raises(ValueError, match = "Quantity to buy must be greater than zero."):
+    with pytest.raises(
+            ValueError, match = "Quantity to buy must be greater than zero."
+    ):
         product.buy(0)
 
 
@@ -136,35 +146,42 @@ def test_buy_more_than_stock_with_promotion():
     Test attempting to purchase more items than are in stock.
 
     Inputs:
-        None (test setup includes creating a Product and SecondHalfPrice instance).
+        None (test setup includes creating a Product
+        and SecondHalfPrice instance).
 
     Outputs:
-        Asserts that an appropriate ValueError is raised when stock is insufficient.
+        Asserts that an appropriate ValueError is raised
+        when stock is insufficient.
     """
-    product = Product(name="Speaker", price=100, quantity=3)
-    promo = SecondHalfPrice(name="Second Half Price")
+    product = Product(name = "Speaker", price = 100, quantity = 3)
+    promo = SecondHalfPrice(name = "Second Half Price")
     product.set_promotion(promo)
 
-    with pytest.raises(ValueError, match="Not enough stock. Only 3 available."):
+    with pytest.raises(
+            ValueError, match = "Not enough stock. Only 3 available."
+    ):
         product.buy(4)
 
 
 # Test: Multiple Products with Different Promotions
 def test_multiple_products_with_promotions():
     """
-    Test applying different promotions to multiple products and verifying their behavior.
+    Test applying different promotions to multiple products
+    and verifying their behavior.
 
     Inputs:
-        None (test setup includes creating multiple Products with different promotions).
+        None (test setup includes creating multiple Products
+        with different promotions).
 
     Outputs:
-        Asserts that the promotional pricing and updated quantities are correct for each product.
+        Asserts that the promotional pricing and updated quantities
+        are correct for each product.
     """
-    laptop = Product(name="Laptop", price=1500, quantity=5)
-    headphones = Product(name="Headphones", price=300, quantity=10)
+    laptop = Product(name = "Laptop", price = 1500, quantity = 5)
+    headphones = Product(name = "Headphones", price = 300, quantity = 10)
 
-    laptop_promo = PercentDiscount(name="10% Off", percent=10)
-    headphones_promo = ThirdOneFree(name="Buy 2 Get 1 Free")
+    laptop_promo = PercentDiscount(name = "10% Off", percent = 10)
+    headphones_promo = ThirdOneFree(name = "Buy 2 Get 1 Free")
 
     laptop.set_promotion(laptop_promo)
     headphones.set_promotion(headphones_promo)
@@ -180,13 +197,15 @@ def test_integration_buy_with_promotions():
     Integration test for buying multiple products with promotions applied.
 
     Inputs:
-        None (test setup includes creating multiple Products with different promotions).
+        None (test setup includes creating multiple Products
+        with different promotions).
 
     Outputs:
-        Asserts that the total pricing and updated quantities are correct for all purchases.
+        Asserts that the total pricing and updated quantities are correct
+        for all purchases.
     """
-    macbook = Product("MacBook Air M2", price=1450, quantity=100)
-    earbuds = Product("Bose QuietComfort Earbuds", price=250, quantity=500)
+    macbook = Product("MacBook Air M2", price = 1450, quantity = 100)
+    earbuds = Product("Bose QuietComfort Earbuds", price = 250, quantity = 500)
 
     macbook_promo = SecondHalfPrice("Second Half Price!")
     earbuds_promo = ThirdOneFree("Third One Free!")

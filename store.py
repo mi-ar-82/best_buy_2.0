@@ -45,7 +45,7 @@ class Store:
         return total_quantity
 
     # Function: Get All Active Products
-    def get_all_products(self) :
+    def get_all_products(self):
         """
         Retrieves all active products in the store.
 
@@ -60,21 +60,25 @@ class Store:
     # Function: Process an Order
     def order(self, shopping_list) -> float:
         """
-        Processes an order based on a shopping list and calculates the total price.
+        Processes an order based on a shopping list
+        and calculates the total price.
 
         :param shopping_list: A list of tuples where each tuple contains:
                               - A product object (Product).
                               - The quantity to purchase (int).
         :return: Total price of the order (float).
-        :raises ValueError: If a product is inactive or not available in the store.
+        :raises ValueError: If a product is inactive
+        or not available in the store.
                             If the requested quantity exceeds stock.
         """
         total_price = 0.0
 
         for product, quantity in shopping_list:
             if not product.is_active():
-                raise ValueError(f"The product {product.name} is inactive and cannot be ordered.")
+                raise ValueError(f"The product {product.name} "
+                                 f"is inactive and cannot be ordered.")
             if product not in self.products:
-                raise ValueError(f"The product {product.name} is not available in the store.")
+                raise ValueError(f"The product {product.name} "
+                                 f"is not available in the store.")
             total_price += product.buy(quantity)
         return total_price

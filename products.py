@@ -23,7 +23,7 @@ class Product:
         # Initialize instance variables
         self.name = name
         self.price = price
-        self._quantity = quantity  # Note the underscore for the protected attribute
+        self._quantity = quantity  # underscore > protected attribute
         self._active = True  # Product is active by default
         self.promotion = None  # New attribute for promotions
 
@@ -97,8 +97,10 @@ class Product:
 
         :return: A string representation of the product.
         """
-        promo_info = f" (Promotion: {self.promotion.name})" if self.promotion else ""
-        return f"{self.name}, Price: {self.price}, Quantity: {self.quantity}{promo_info}"
+        promo_info = (f" (Promotion: "
+                      f"{self.promotion.name})") if self.promotion else ""
+        return (f"{self.name}, Price: {self.price}, "
+                f"Quantity: {self.quantity}{promo_info}")
 
     def buy(self, quantity: int) -> float:
         """
@@ -111,7 +113,8 @@ class Product:
         if quantity <= 0:
             raise ValueError("Quantity to buy must be greater than zero.")
         if quantity > self.quantity:
-            raise ValueError(f"Not enough stock. Only {self.quantity} available.")
+            raise ValueError(f"Not enough stock. "
+                             f"Only {self.quantity} available.")
 
         total_price = (
             self.promotion.apply_promotion(self, quantity)
@@ -122,65 +125,127 @@ class Product:
         return total_price
 
 
+# NonStockedProduct Class
 class NonStockedProduct(Product):
     """
     Represents a product that is not physically stocked.
-    This subclass overrides the behavior of quantity to ensure it is always zero,
-    as these products are intangible and do not require stock tracking.
+    This subclass overrides the behavior of quantity
+    to ensure it is always zero, as these products are intangible
+    and do not require stock tracking.
     """
 
-    def __init__(self, name, price):
-        # Initialize a non-stocked product with quantity always set to 0
-        super().__init__(name, price, quantity=0)
+    def __init__(self, name: str, price: float):
+        """
+        Initializes a non-stocked product with quantity always set to 0.
+
+        :param name: Name of the product (str).
+        :param price: Price of the product (float).
+        """
+        super().__init__(name, price, quantity = 0)
 
     @property
-    def quantity(self):
+    def quantity(self) -> int:
+        """
+        Overrides the quantity property to always return 0.
+
+        :return: Quantity of the product (int), always 0.
+        """
         return self._quantity
 
     @quantity.setter
     def quantity(self, quantity: int):
+        """
+        Ensures that quantity for non-stocked products cannot be changed.
+
+        :param quantity: Attempted new quantity (int).
+        :raises ValueError: Always raises an error if quantity is not 0.
+        """
         if quantity != 0:
-            raise ValueError("Non-stocked products must always have a quantity of 0.")
+            raise ValueError(
+                "Non-stocked products must always have a quantity of 0."
+            )
 
     def show(self) -> str:
+        """
+        Displays details about the non-stocked product.
+
+        :return: A string representation of the product.
+        """
         return f"{self.name} (Non-Stocked), Price: {self.price}"
 
 
+# LimitedProduct Class
 class LimitedProduct(Product):
     """
     Represents a product with a maximum purchase limit per order.
-    This subclass extends the base Product class to add the functionality of limiting
-    the quantity that can be purchased in a single order.
-    If an attempt is made to
-    buy more than the allowed maximum, an exception is raised.
+    This subclass extends the base Product class to add the functionality
+    of limiting the quantity that can be purchased in a single order.
     """
 
-    def __init__(self, name, price, quantity, maximum):
+    def __init__(self, name: str, price: float, quantity: int, maximum: int):
+        """
+        Initializes a limited product with a maximum purchase limit.
+
+        :param name: Name of the product (str).
+        :param price: Price of the product (float).
+        :param quantity: Quantity of the product in stock (int).
+        :param maximum: Maximum purchase limit per order (int).
+        :raises ValueError: If maximum is negative.
+        """
         super().__init__(name, price, quantity)
-        self._maximum = maximum  # Protected attribute for maximum
         if maximum < 0:
             raise ValueError("Maximum purchase limit cannot be negative.")
+        self._maximum = maximum
 
     @property
-    def maximum(self):
+    def maximum(self) -> int:
+        """
+        Gets the maximum purchase limit per order.
+
+        :return: Maximum purchase limit (int).
+        """
         return self._maximum
 
     @maximum.setter
-    def maximum(self, maximum):
+    def maximum(self, maximum: int):
+        """
+        Sets a new maximum purchase limit per order.
+
+        :param maximum: New maximum limit (int).
+        :raises ValueError: If maximum is negative.
+        """
         if maximum < 0:
             raise ValueError("Maximum purchase limit cannot be negative.")
         self._maximum = maximum
 
     def buy(self, quantity: int) -> float:
+        """
+        Processes a purchase while enforcing the maximum purchase limit.
+
+        :param quantity: Quantity to purchase (int).
+        :return: Total price after applying promotions (float).
+        :raises ValueError: If requested quantity exceeds the maximum limit.
+                           Also raises errors from the parent `buy` method.
+        """
         if quantity > self.maximum:
-            raise ValueError(f"You cannot buy more than {self.maximum} of this product.")
+            raise ValueError(f"You cannot buy more than "
+                             f"{self.maximum} of this product.")
+
         return super().buy(quantity)
 
     def show(self) -> str:
-        return (f"{self.name} (Limited, Max: {self.maximum}), "
-                f"Price: {self.price}, Quantity: {self.quantity}")
+        """
+        Displays details about the limited product.
+
+        :return: A string representation of the product.
+        """
+        return (f"{self.name} "
+                f"(Limited, Max: {self.maximum}), "
+                f"Price: {self.price}, "
+                f"Quantity: {self.quantity}")
 
 
+# Promotion Abstract Base Class
 class Promotion(ABC):
     """
     Abstract base class for promotions.
@@ -194,47 +259,88 @@ class Promotion(ABC):
         pass
 
 
+# PercentDiscount Class
 class PercentDiscount(Promotion):
     """
     Applies a percentage discount to the product.
     """
 
-    def __init__(self, name, percent):
+    def __init__(self, name: str, percent: float):
+        """
+        Initializes a percentage discount promotion.
+
+        :param name: Name of the promotion (str).
+        :param percent: Discount percentage (float).
+        :raises ValueError: If percent is not between 0 and 100.
+        """
         super().__init__(name)
-        self._percent = percent
         if not (0 <= percent <= 100):
             raise ValueError("Percent must be between 0 and 100.")
+        self._percent = percent
 
     @property
-    def percent(self):
+    def percent(self) -> float:
+        """
+        Gets the discount percentage.
+
+        :return: Discount percentage (float).
+        """
         return self._percent
 
     @percent.setter
-    def percent(self, percent):
+    def percent(self, percent: float):
+        """
+        Sets a new discount percentage.
+
+        :param percent: New discount percentage (float).
+        :raises ValueError: If percent is not between 0 and 100.
+        """
         if not (0 <= percent <= 100):
             raise ValueError("Percent must be between 0 and 100.")
         self._percent = percent
 
-    def apply_promotion(self, product, quantity) -> float:
+    def apply_promotion(self, product: Product, quantity: int) -> float:
+        """
+        Applies the percentage discount to the total price of the product.
+
+        :param product: Product to which the promotion
+        is applied (Product object).
+        :param quantity: Quantity of the product being purchased (int).
+        :return: Total price after applying the discount (float).
+        :raises ValueError: If quantity is invalid
+        or product price is negative.
+        """
         if quantity <= 0:
             raise ValueError("Quantity must be greater than zero.")
-
         if product.price < 0:
             raise ValueError("Product price cannot be negative.")
+
         return product.price * quantity * (1 - self.percent / 100)
 
 
+# SecondHalfPrice Class
 class SecondHalfPrice(Promotion):
     """
-    Applies a promotion where the second item is half price.
+    Applies a promotion where every second item is half price.
     """
 
-    def apply_promotion(self, product, quantity) -> float:
+    def apply_promotion(self, product: Product, quantity: int) -> float:
+        """
+        Calculates the total price with every second item at half price.
+
+        :param product: Product to which
+        the promotion is applied (Product object).
+        :param quantity: Quantity of the product being purchased (int).
+        :return: Total price after applying the promotion (float).
+        """
         full_price_items = quantity // 2 + quantity % 2
         half_price_items = quantity // 2
-        return full_price_items * product.price + half_price_items * product.price * 0.5
+
+        return (full_price_items * product.price +
+                half_price_items * product.price * 0.5)
 
 
+# ThirdOneFree Class
 class ThirdOneFree(Promotion):
     """
     Applies a promotion where every third item is free.

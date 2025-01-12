@@ -33,7 +33,8 @@ def find_product_by_name(store_obj, product_name):
     Searches for a product by name in the store.
     The product needs to be active in order to be shown.
     If an exact match is found, it returns the product.
-    If no exact match is found, it searches for partial matches and prints them.
+    If no exact match is found,
+    it searches for partial matches and prints them.
 
     :param store_obj: The store object containing products.
     :param product_name: The name of the product to search for.
@@ -42,7 +43,9 @@ def find_product_by_name(store_obj, product_name):
     # Find exact match
     product = None
     for product_item in store_obj.products:
-        if product_item.name.lower() == product_name.lower() and product_item.is_active():
+        if (product_item.name.lower() == product_name.lower()
+                and
+                product_item.is_active()):
             product = product_item
             break
 
@@ -58,7 +61,8 @@ def find_product_by_name(store_obj, product_name):
             for matched_product in matching_products:
                 print(matched_product.show())
         else:
-            print(f"No products found for the search query '{product_name}'. Please try again.")
+            print(f"No products found for the search query '{product_name}'. "
+                  f"Please try again.")
 
     return product
 
@@ -66,14 +70,16 @@ def find_product_by_name(store_obj, product_name):
 # Function: Make Order
 def make_order(store_obj):
     """
-    Allows the user to make an order by specifying product names and quantities.
+    Allows the user to make an order by specifying product names
+     and quantities.
 
     :param store_obj: The store object containing the products (store.Store).
     :return: None
     """
     shopping_list = []
     while True:
-        product_name = input("\nEnter the product name (or 'done' to finish): ").strip()
+        product_name = input("\nEnter the product name "
+                             "(or 'done' to finish): ").strip()
         if product_name.lower() == 'done':
             break
 
@@ -85,7 +91,8 @@ def make_order(store_obj):
             print(f"Product '{product_name}' not found. Please try again.")
             continue
         if not product.is_active():
-            print(f"Product '{product_name}' is inactive and cannot be ordered.")
+            print(f"Product '{product_name}' is inactive "
+                  f"and cannot be ordered.")
             continue
 
         try:
@@ -123,14 +130,17 @@ def start(store_obj):
 
     # Setup initial stock of inventory
     product_list = [
-        products.Product("MacBook Air M2", price = 1450, quantity = 100),
-        products.Product("Bose QuietComfort Earbuds", price = 250, quantity = 500),
-        products.Product("Google Pixel 7", price = 500, quantity = 250),
+        products.Product("MacBook Air M2", price = 1450,
+                         quantity = 100),
+        products.Product("Bose QuietComfort Earbuds", price = 250,
+                         quantity = 500),
+        products.Product("Google Pixel 7", price = 500,
+                         quantity = 250),
         products.NonStockedProduct("Windows License", price = 125),
-        products.LimitedProduct("Shipping", price = 10, quantity = 250, maximum = 1)
+        products.LimitedProduct("Shipping", price = 10,
+                                quantity = 250, maximum = 1)
     ]
     best_buy = store.Store(product_list)
-
 
     while True:
         print("\nWelcome to Best Buy!")
@@ -155,7 +165,6 @@ def start(store_obj):
             quit_program()
         else:
             print("Invalid choice. Please select a number between 1 and 4.")
-
 
 
 if __name__ == "__main__":

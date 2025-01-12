@@ -1,11 +1,9 @@
 import pytest
+
 from products import (
     Product,
     NonStockedProduct,
-    LimitedProduct,
-    PercentDiscount,
-    SecondHalfPrice,
-    ThirdOneFree
+    LimitedProduct
 )
 
 
@@ -27,7 +25,8 @@ def test_create_normal_product():
 # Test that creating a product with invalid details invokes an exception
 def test_create_invalid_product():
     """
-    Test that creating a product with invalid details raises appropriate exceptions.
+    Test that creating a product with invalid details
+    raises appropriate exceptions.
 
     Input: None
     Output: None (Asserts exceptions are raised for invalid inputs)
@@ -38,7 +37,9 @@ def test_create_invalid_product():
     with pytest.raises(ValueError, match = "Price cannot be negative."):
         Product(name = "MacBook Air M2", price = -10, quantity = 100)
 
-    product = Product(name = "MacBook Air M2", price = 1450, quantity = 100)  # Create the product first
+    product = Product(
+        name = "MacBook Air M2", price = 1450, quantity = 100
+    )  # Create the product first
 
     with pytest.raises(ValueError, match = "Quantity cannot be negative."):
         product.quantity = -5  # Try setting the quantity to a negative value
@@ -62,10 +63,12 @@ def test_product_becomes_inactive_when_quantity_zero():
 # Test that product purchase modifies the quantity and returns the right output
 def test_product_purchase_modifies_quantity_and_returns_correct_output():
     """
-    Test that purchasing a product modifies its quantity and returns the correct total price.
+    Test that purchasing a product modifies its quantity and
+    returns the correct total price.
 
     Input: None
-    Output: None (Asserts correct total price and updated quantity after purchase)
+    Output: None (Asserts correct total price and
+    updated quantity after purchase)
     """
     product = Product(name = "Smartphone", price = 500, quantity = 5)
 
@@ -85,7 +88,9 @@ def test_buying_larger_quantity_than_exists_raises_exception():
     """
     product = Product(name = "Tablet", price = 300, quantity = 2)
 
-    with pytest.raises(ValueError, match = "Not enough stock. Only 2 available."):
+    with pytest.raises(
+            ValueError, match = "Not enough stock. Only 2 available."
+    ):
         product.buy(3)
 
 
@@ -99,7 +104,9 @@ def test_buying_non_positive_quantity_raises_exception():
     """
     product = Product(name = "Monitor", price = 150, quantity = 10)
 
-    with pytest.raises(ValueError, match = "Quantity to buy must be greater than zero."):
+    with pytest.raises(
+            ValueError, match = "Quantity to buy must be greater than zero."
+    ):
         product.buy(0)
 
 
@@ -109,7 +116,8 @@ def test_non_stocked_product():
     Test the behavior of NonStockedProduct class.
 
     Input: None
-    Output: None (Asserts non-stocked products have fixed zero quantity and cannot be modified)
+    Output: None (Asserts non-stocked products have fixed zero quantity
+    and cannot be modified)
     """
     product = NonStockedProduct(name = "Windows License", price = 125)
 
@@ -125,9 +133,10 @@ def test_limited_product():
     Test the behavior of LimitedProduct class.
 
     Input: None
-    Output: None (Asserts limited products enforce maximum purchase limit correctly)
+    Output: None
+    (Asserts limited products enforce maximum purchase limit correctly)
     """
-    product = LimitedProduct(name="Shipping", price=10, quantity=5, maximum=1)
+    product = LimitedProduct(name = "Shipping", price = 10, quantity = 5, maximum = 1)
     with pytest.raises(ValueError):
         product.buy(2)
     assert product.buy(1) == 10
