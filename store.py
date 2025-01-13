@@ -40,7 +40,7 @@ class Store:
         """
         total_quantity = 0
         for product in self.products:
-            if product.active:  # Use 'active' property instead of 'is_active()'
+            if product.active:  # Use 'active' instead of 'is_active()'
                 total_quantity += product.quantity
         return total_quantity
 
@@ -62,14 +62,12 @@ class Store:
         """
         Processes an order based on a shopping list
         and calculates the total price.
-
         :param shopping_list: A list of tuples where each tuple contains:
                               - A product object (Product).
                               - The quantity to purchase (int).
         :return: Total price of the order (float).
-        :raises ValueError: If a product is inactive
-        or not available in the store.
-                            If the requested quantity exceeds stock.
+        :raises ValueError: If a product is inactive or not available
+        in the store, or if the requested quantity exceeds stock.
         """
         total_price = 0.0
 
@@ -77,8 +75,12 @@ class Store:
             if not product.active:
                 raise ValueError(f"The product {product.name} "
                                  f"is inactive and cannot be ordered.")
+
             if product not in self.products:
                 raise ValueError(f"The product {product.name} "
                                  f"is not available in the store.")
+
+            # Propagate exceptions from Product.buy
             total_price += product.buy(quantity)
+
         return total_price

@@ -59,7 +59,8 @@ def find_product_by_name(store_obj, product_name):
             for matched_product in matching_products:
                 print(matched_product.show())
         else:
-            print(f"No products found for the search query '{product_name}'. Please try again.")
+            print(f"No products found for the search query "
+                  f"'{product_name}'. Please try again.")
 
     return product
 
@@ -68,12 +69,12 @@ def find_product_by_name(store_obj, product_name):
 def make_order(store_obj):
     """
     Allows the user to make an order by specifying product names
-     and quantities.
-
+    and quantities.
     :param store_obj: The store object containing the products (store.Store).
     :return: None
     """
     shopping_list = []
+
     while True:
         product_name = input("\nEnter the product name "
                              "(or 'done' to finish): ").strip()
@@ -82,11 +83,10 @@ def make_order(store_obj):
 
         # Use the find_product_by_name function
         product = find_product_by_name(store_obj, product_name)
-
         if not product:
-            # If no exact match was returned
             print(f"Product '{product_name}' not found. Please try again.")
             continue
+
         if not product.active:
             print(f"Product '{product_name}' is inactive "
                   f"and cannot be ordered.")
@@ -98,11 +98,9 @@ def make_order(store_obj):
         except ValueError:
             print("Invalid quantity. Please enter a valid number.")
 
-    try:
-        total_price = store_obj.order(shopping_list)
-        print(f"\nOrder placed successfully! Total cost: ${total_price:.2f}")
-    except ValueError as e:
-        print(f"Error placing order: {e}")
+    # Process the order
+    total_price = store_obj.order(shopping_list)
+    print(f"\nOrder placed successfully! Total cost: ${total_price:.2f}")
 
 
 # Function: Quit Program
@@ -123,11 +121,15 @@ def start():
     """
 
     # setup initial stock of inventory
-    product_list = [products.Product("MacBook Air M2", price = 1450, quantity = 100),
-                    products.Product("Bose QuietComfort Earbuds", price = 250, quantity = 500),
-                    products.Product("Google Pixel 7", price = 500, quantity = 250),
+    product_list = [products.Product("MacBook Air M2", price = 1450,
+                                     quantity = 100),
+                    products.Product("Bose QuietComfort Earbuds",
+                                     price = 250, quantity = 500),
+                    products.Product("Google Pixel 7", price = 500,
+                                     quantity = 250),
                     products.NonStockedProduct("Windows License", price = 125),
-                    products.LimitedProduct("Shipping", price = 10, quantity = 250, maximum = 1)
+                    products.LimitedProduct("Shipping", price = 10,
+                                            quantity = 250, maximum = 1)
                     ]
 
     # Create promotion catalog
@@ -139,7 +141,6 @@ def start():
     product_list[0].set_promotion(second_half_price)
     product_list[1].set_promotion(third_one_free)
     product_list[3].set_promotion(thirty_percent)
-
 
     best_buy = store.Store(product_list)
 

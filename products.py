@@ -105,13 +105,13 @@ class Product:
     def buy(self, quantity: int) -> float:
         """
         Processes a purchase of the product.
-
         :param quantity: Quantity to purchase (int).
         :return: Total price after applying promotions (float).
         :raises ValueError: If requested quantity is invalid or exceeds stock.
         """
         if quantity <= 0:
             raise ValueError("Quantity to buy must be greater than zero.")
+
         if quantity > self.quantity:
             raise ValueError(f"Not enough stock. "
                              f"Only {self.quantity} available.")

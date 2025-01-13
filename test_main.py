@@ -47,7 +47,8 @@ class TestMain(unittest.TestCase):
         """Test make_order with an invalid product name."""
         main.make_order(self.store)
         self.assertTrue(mock_print.called)
-        self.assertIn("Product 'Nonexistent Product' not found.", mock_print.call_args_list[-2][0][0])
+        self.assertIn("Product 'Nonexistent Product' not found.",
+                      mock_print.call_args_list[-2][0][0])
 
     @patch('builtins.input', side_effect = ["Google Pixel 7"])
     @patch('builtins.print')
