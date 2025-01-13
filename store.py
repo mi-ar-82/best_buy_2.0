@@ -40,8 +40,8 @@ class Store:
         """
         total_quantity = 0
         for product in self.products:
-            if product.is_active():
-                total_quantity += product.get_quantity()
+            if product.active:  # Use 'active' property instead of 'is_active()'
+                total_quantity += product.quantity
         return total_quantity
 
     # Function: Get All Active Products
@@ -53,7 +53,7 @@ class Store:
         """
         active_products = []
         for product in self.products:
-            if product.is_active():
+            if product.active:
                 active_products.append(product)
         return active_products
 
@@ -74,7 +74,7 @@ class Store:
         total_price = 0.0
 
         for product, quantity in shopping_list:
-            if not product.is_active():
+            if not product.active:
                 raise ValueError(f"The product {product.name} "
                                  f"is inactive and cannot be ordered.")
             if product not in self.products:
